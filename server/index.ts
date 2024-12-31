@@ -1,23 +1,12 @@
 import { Hono } from 'hono';
-import { cors } from 'hono/cors';
+import { logger } from 'hono/logger';
 
 const app = new Hono();
 
-app.use(
-  '*',
-  cors({
-    origin: '*',
-    allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowHeaders: ['Content-Type', 'Authorization'],
-    exposeHeaders: ['Content-Length'],
-    maxAge: 600,
-  }),
-);
+// カスタムロガーの定義
+export const customLogger = (message: string, ...rest: string[]) => {
+  console.log(message, ...rest);
+};
 
-const route = app.get('/api/test', c => {
-  return c.json({ message: 'Hello, World!' });
-});
-
-export default app;
-
-export type AppType = typeof route;
+// ログの設定
+app.use('*', logger(customLogger));
