@@ -20,6 +20,24 @@ test.use('/welcome', async (c, next) => {
   c.res.headers.append('X-Debug', 'Debug message');
 });
 
+// render
+test.use(async (c, next) => {
+  c.setRenderer(content => {
+    return c.html(`
+      <html>
+        <body>
+          <p>${content}</p>
+        </body>
+      </html>,
+    `);
+  });
+  await next();
+});
+
+test.get('/render', c => {
+  return c.render('Hello, Hono!');
+});
+
 // ユーザーエージェントを取得
 test.get('/user-agent', c => {
   const userAgent = c.req.header('User-Agent');
