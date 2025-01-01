@@ -1,6 +1,18 @@
 import { Hono } from 'hono';
+import { createMiddleware } from 'hono/factory';
+
+type Env = {
+  Variables: {
+    echo: (str: string) => string;
+  };
+};
 
 const test = new Hono();
+
+const echoMiddleware = createMiddleware<Env>(async (c, next) => {
+  c.set('echo', str => str);
+  await next();
+});
 
 // welcomeルートにミドルウェアを適用
 test.use('/welcome', async (c, next) => {
@@ -37,6 +49,10 @@ test.get('/notfound', c => {
 // リダイレクト
 test.get('/redirect', c => {
   return c.redirect('/api/tests/html');
+});
+
+test.get('/echo', echoMiddleware, c => {
+  return c.text(c.var.echo('Hello, Hono!'));
 });
 
 export default test;
