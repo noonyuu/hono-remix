@@ -4,12 +4,16 @@ type Variables = {
   message: string;
 };
 
-export const todoRouter = new Hono<{ Variables: Variables }>()
-  .use(async (c, next) => {
-    c.set('message', 'Hello, World!!!');
-    await next();
-  })
-  .get('/data', async c => {
-    const message = c.get('message');
-    return c.json({ todos: message });
-  });
+const todo = new Hono<{ Variables: Variables }>();
+
+todo.use(async (c, next) => {
+  c.set('message', 'Hello, World!!!');
+  await next();
+});
+
+todo.get('/data', async c => {
+  const message = c.get('message');
+  return c.json({ todos: message });
+});
+
+export default todo;
