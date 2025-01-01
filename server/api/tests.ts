@@ -22,10 +22,14 @@ test.use('/welcome', async (c, next) => {
 
 // render
 test.use(async (c, next) => {
-  c.setRenderer(content => {
+  c.setRenderer((content, head) => {
     return c.html(`
       <html>
+        <head>
+          <title>${head.title}</title>
+        </head>
         <body>
+          <header>${head.title}</header>
           <p>${content}</p>
         </body>
       </html>,
@@ -35,7 +39,9 @@ test.use(async (c, next) => {
 });
 
 test.get('/render', c => {
-  return c.render('Hello, Hono!');
+  return c.render(`<p>Hello Hono!!</p>`, {
+    title: 'Hono',
+  });
 });
 
 // ユーザーエージェントを取得
@@ -74,3 +80,12 @@ test.get('/echo', echoMiddleware, c => {
 });
 
 export default test;
+
+declare module 'hono' {
+  interface ContextRenderer {
+    (
+      content: string | Promise<string>,
+      head: { title: string },
+    ): Response | Promise<Response>;
+  }
+}
