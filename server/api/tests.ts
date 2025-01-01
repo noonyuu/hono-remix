@@ -2,6 +2,12 @@ import { Hono } from 'hono';
 
 const test = new Hono();
 
+// welcomeルートにミドルウェアを適用
+test.use('/welcome', async (c, next) => {
+  await next();
+  c.res.headers.append('X-Debug', 'Debug message');
+});
+
 // ユーザーエージェントを取得
 test.get('/user-agent', c => {
   const userAgent = c.req.header('User-Agent');
@@ -26,6 +32,11 @@ test.get('/html', c => {
 // notFoundを返す
 test.get('/notfound', c => {
   return c.notFound();
+});
+
+// リダイレクト
+test.get('/redirect', c => {
+  return c.redirect('/api/tests/html');
 });
 
 export default test;
