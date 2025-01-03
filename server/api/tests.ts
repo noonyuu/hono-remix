@@ -79,6 +79,17 @@ test.get('/echo', echoMiddleware, c => {
   return c.text(c.var.echo('Hello, Hono!'));
 });
 
+// executionCtx.waitUntil
+test.get('/wait', async c => {
+  c.executionCtx.waitUntil(
+    (async () => {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('waited 1s');
+    })(),
+  );
+  return c.text('Waiting...');
+});
+
 export default test;
 
 declare module 'hono' {
