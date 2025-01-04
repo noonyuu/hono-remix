@@ -14,6 +14,11 @@ const echoMiddleware = createMiddleware<Env>(async (c, next) => {
   await next();
 });
 
+const mw = createMiddleware(async (c, next) => {
+  c.set('result', 'Hello, Hono!');
+  await next();
+});
+
 // welcomeルートにミドルウェアを適用
 test.use('/welcome', async (c, next) => {
   await next();
@@ -36,6 +41,12 @@ test.use(async (c, next) => {
     `);
   });
   await next();
+});
+
+test.use('/context-variable-map', mw);
+test.get('/context-variable-map', c => {
+  const val = c.get('result');
+  return c.json({ result: val });
 });
 
 test.get('/render', c => {
@@ -98,5 +109,9 @@ declare module 'hono' {
       content: string | Promise<string>,
       head: { title: string },
     ): Response | Promise<Response>;
+  }
+
+  interface ContextVariableMap {
+    result: string;
   }
 }
