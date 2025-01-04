@@ -67,6 +67,18 @@ app.get('/post/:id/comment/:comment_id', c => {
   return c.json({ id, comment_id });
 });
 
+// チェーンルーティング
+app
+  .get('/chain', c => {
+    return c.text('GET /chain');
+  })
+  .post(c => {
+    return c.text('POST /chain');
+  })
+  .put(c => {
+    return c.text('PUT /chain');
+  });
+
 // prettier-ignore
 const router = app
   .basePath('/api')
