@@ -79,6 +79,14 @@ app
     return c.text('PUT /chain');
   });
 
+// aysnc/awaitを利用した非同期処理
+app.get('/async', async c => {
+  const response = await fetch(
+    'https://benki.noonyuu.com/app/v1/word-list/all',
+  );
+  return c.text(`Status is ${response.status}`);
+});
+
 // prettier-ignore
 const router = app
   .basePath('/api')
