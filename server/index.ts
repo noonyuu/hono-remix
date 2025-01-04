@@ -50,6 +50,11 @@ app.use(
 
 app.get('/api/hello', c => c.text('Hello, World!'));
 
+// ワイルドカードを含むパス
+app.get('/wild/*/card', c => {
+  return c.text('GET /wild/*/card');
+});
+
 // prettier-ignore
 const router = app
   .basePath('/api')
