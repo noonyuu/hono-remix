@@ -55,6 +55,18 @@ app.get('/wild/*/card', c => {
   return c.text('GET /wild/*/card');
 });
 
+// パラメータを含むパス
+app.get('/post/:id/comment/:comment_id', c => {
+  // const id = c.req.param('id');
+  // const commentId = c.req.param('comment_id');
+
+  // return c.json({ id, commentId });
+
+  const { id, comment_id } = c.req.param();
+
+  return c.json({ id, comment_id });
+});
+
 // prettier-ignore
 const router = app
   .basePath('/api')
